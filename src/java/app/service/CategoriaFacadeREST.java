@@ -6,10 +6,12 @@
 package app.service;
 
 import app.entity.Categoria;
+import app.entity.Serie;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -87,5 +89,20 @@ public class CategoriaFacadeREST extends AbstractFacade<Categoria> {
     protected EntityManager getEntityManager() {
         return em;
     }
+    //----------------------------- NUESTROS SERVICIOS ----------------------------------------------------------
     
+    //Servicio para actualizar la tabla dependiendo del valor que tenga el selectOneMenu
+    @GET
+    @Path("categoriaByNombre/{nombre}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public Categoria createCategoriaByNombre(@PathParam("nombre") String nombre){
+        Categoria c=new Categoria();
+        c.setNombre(nombre);
+        try{
+            this.create(c);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return c;
+    }
 }
