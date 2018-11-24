@@ -10,6 +10,7 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -22,7 +23,7 @@ import javax.ws.rs.core.MediaType;
 
 /**
  *
- * @author Jairo
+ * @author Grupo B1
  */
 @Stateless
 @Path("app.entity.serie")
@@ -86,6 +87,20 @@ public class SerieFacadeREST extends AbstractFacade<Serie> {
     @Override
     protected EntityManager getEntityManager() {
         return em;
+    }
+
+//----------------------------- NUESTROS SERVICIOS ----------------------------------------------------------
+    
+    //Servicio para actualizar la tabla dependiendo del valor que tenga el selectOneMenu
+    @GET
+    @Path("seriesByIdCategoria/{idCategoria}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Serie> findSeriesByIdCategoria(@PathParam("idCategoria") Integer idCategoria){
+        List<Serie> listaSerie;
+        Query q = this.em.createQuery("SELECT s FROM Serie s JOIN s.categoriaCollection c WHERE c.idCategoria=:idCategoria");
+        q.setParameter("idCategoria", idCategoria);
+        listaSerie = q.getResultList();
+        return listaSerie;
     }
     
 }
