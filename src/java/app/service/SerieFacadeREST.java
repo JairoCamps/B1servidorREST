@@ -61,7 +61,7 @@ public class SerieFacadeREST extends AbstractFacade<Serie> {
     @GET
     @Path("{id}")
     @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
-    public Serie find(@PathParam("id") String id) {
+    public Serie find(@PathParam("id") Integer id) {
         return super.find(id);
     }
 
