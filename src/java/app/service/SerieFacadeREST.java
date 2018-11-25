@@ -5,10 +5,12 @@
  */
 package app.service;
 
+import app.entity.Categoria;
 import app.entity.Serie;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.ws.rs.Consumes;
@@ -99,8 +101,46 @@ public class SerieFacadeREST extends AbstractFacade<Serie> {
         List<Serie> listaSerie;
         Query q = this.em.createQuery("SELECT s FROM Serie s JOIN s.categoriaCollection c WHERE c.idCategoria=:idCategoria");
         q.setParameter("idCategoria", idCategoria);
-        listaSerie = q.getResultList();
+        try{
+            listaSerie = (List<Serie>) q.getResultList();
+        }catch (NoResultException e){
+            listaSerie = null;
+        }
+        
         return listaSerie;
+    }
+    
+    //Servicio para encontrar una serie por su nombre
+    @GET
+    @Path("serieByNombre/{nombre}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public Serie findSerieByNombre (@PathParam("nombre") String nombre){
+        Serie s;
+        Query q = this.em.createQuery("SELECT s FROM Serie s WHERE s.nombre = :nombre");
+        q.setParameter("nombre", nombre);
+        try{
+            s = (Serie) q.getSingleResult();
+        }catch (NoResultException e){
+            s = null;
+        }       
+        return s;
+    }
+    
+    //Servicio para encontrar las categorias de una serie
+    @GET
+    @Path("categoriasByIdSerie/{idSerie}")
+    @Produces({MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON})
+    public List<Categoria> findCategoriasByIdSerie (@PathParam("idSerie") Integer idSerie){
+        List<Categoria> listaCategorias;
+        Query q = this.em.createQuery("SELECT c FROM Categoria c JOIN c.serieCollection s WHERE s.idSerie = :idSerie");
+        q.setParameter("idSerie", idSerie);
+        try{
+            listaCategorias = (List<Categoria>) q.getResultList();
+        }catch (NoResultException e){
+            listaCategorias = null;
+        }
+        
+        return listaCategorias;
     }
     
 }
