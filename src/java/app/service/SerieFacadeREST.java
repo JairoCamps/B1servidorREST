@@ -143,4 +143,6 @@ public class SerieFacadeREST extends AbstractFacade<Serie> {
         return listaCategorias;
     }
     
+    
+    
 }
